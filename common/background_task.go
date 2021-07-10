@@ -11,7 +11,7 @@ type BackgroundTask interface {
 	InitEmailSchedulers()
 	getFirstEmailQueue() Email
 	AddEmailQueue(queueOfEmail Email)
-	SendNextEmail(email Email)
+	SendNextEmail(email Email) error
 }
 type backgroundTask struct {
 	cron  *gocron.Scheduler
@@ -40,13 +40,24 @@ func (bg *backgroundTask) InitEmailSchedulers() {
 
 }
 func (bg *backgroundTask) CheckEmailQueue() {
-	fmt.Println("=========INSIDE CheckEmailQueue")
+	fmt.Printf("=========INSIDE CheckEmailQueue %s \n", time.Now())
 	if len(bg.queue) != 0 {
 		email := bg.getFirstEmailQueue()
-		bg.SendNextEmail(email)
+		if bg.SendNextEmail(email) == nil {
+			bg.RemoveFirstEmailQueue()
+		}
 	}
 }
 func (bg *backgroundTask) getFirstEmailQueue() Email {
+	// fmt.Println("=========INSIDE getFirstEmailQueue")
+	var queueElement Email
+	if len(bg.queue) != 0 {
+		queueElement = bg.queue[0]
+		// bg.queue = bg.queue[1:]
+	}
+	return queueElement
+}
+func (bg *backgroundTask) RemoveFirstEmailQueue() Email {
 	// fmt.Println("=========INSIDE getFirstEmailQueue")
 	var queueElement Email
 	if len(bg.queue) != 0 {
@@ -60,7 +71,7 @@ func (bg *backgroundTask) AddEmailQueue(queueOfEmail Email) {
 	bg.queue = append(bg.queue, queueOfEmail)
 }
 
-func (bg *backgroundTask) SendNextEmail(email Email) {
+func (bg *backgroundTask) SendNextEmail(email Email) error {
 	// fmt.Println("=========INSIDE SendNextEmail")
 	//Send Confirmation Email
 	// regToken := randstr.Hex(16) // generate 128-bit hex string
@@ -70,7 +81,7 @@ func (bg *backgroundTask) SendNextEmail(email Email) {
 		"This is the email body.\r\n" +
 		"http://localhost:8080/api/register/confirmation?email=" + email.ToEmail[0] + "&token=" + email.RegToken + "&role=" + email.Role)
 
-	SendEmail(email.ToEmail, msg)
+	return SendEmail(email.ToEmail, msg)
 }
 
 func (bg *backgroundTask) JustFunc() { fmt.Println("alhamdulillah") }

@@ -33,11 +33,8 @@ func ResponseFormatter(code int, status string, message interface{}, data interf
 	return response
 }
 func ResponseErrorFormatter(c echo.Context, err error) error {
-	if err != nil {
-		response := ResponseFormatter(http.StatusBadRequest, "error", "invalid request", err.Error())
-		return c.JSON(http.StatusBadRequest, response)
-	}
-	return nil
+	response := ResponseFormatter(http.StatusBadRequest, "error", "invalid request", err.Error())
+	return c.JSON(http.StatusBadRequest, response)
 
 }
 func ErrorFormatter(err error) []string {

@@ -8,7 +8,11 @@ import (
 	"gorm.io/gorm"
 )
 
-func DBSeed(db *gorm.DB) error {
+func NewUserSeeder(db *gorm.DB) {
+	CreateDBTable(db) //create table first, then seeder
+	DBSeedUser(db)
+}
+func DBSeedUser(db *gorm.DB) error {
 	UserDataSeed(db)
 	// AdminDataSeed(db)
 	// ReaderDataSeed(db)
@@ -27,9 +31,9 @@ func UserDataSeed(db *gorm.DB) {
 	db.Exec(statement, "guest", "guest1@gmail.com", common.GeneratePassword("guest1"), "guest1", "http://profile_pic_url_guest1.jpg", faker.Timestamp(), faker.Timestamp())
 }
 
-func InitDBTable(db *gorm.DB) {
+func CreateDBTable(db *gorm.DB) {
 	// db.AutoMigrate(&User{}, &Event{}, &Transaction{}, &Registration{})
-	db.AutoMigrate(UserRegistration{})
+	db.AutoMigrate(UserRegistration{}, User{})
 
 	// Create Fresh UserRegistration Table
 	if (db.Migrator().HasTable(&UserRegistration{})) {
@@ -37,5 +41,12 @@ func InitDBTable(db *gorm.DB) {
 		db.Migrator().DropTable(&UserRegistration{})
 	}
 	db.Migrator().CreateTable(&UserRegistration{})
+
+	// Create Fresh User Table
+	if (db.Migrator().HasTable(&User{})) {
+		fmt.Println("User table exist")
+		db.Migrator().DropTable(&User{})
+	}
+	db.Migrator().CreateTable(&User{})
 
 }

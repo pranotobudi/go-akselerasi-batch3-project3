@@ -3,6 +3,7 @@ package users
 import (
 	"time"
 
+	"github.com/pranotobudi/go-akselerasi-batch3-project3/api/recipes"
 	"gorm.io/gorm"
 )
 
@@ -17,21 +18,12 @@ type UserRegistration struct {
 	TimeCreated       time.Time
 }
 
-type Users struct {
+type User struct {
 	gorm.Model
 	Role       string
 	Username   string
 	Email      string
 	Password   string
 	ProfilePic string
-	Recipes    []Recipe `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-}
-
-type Recipe struct {
-	gorm.Model
-	UserID      uint
-	Description string
-	Category    string
-	Country     string
-	RecipePic   string
+	Recipes    []recipes.Recipe `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }

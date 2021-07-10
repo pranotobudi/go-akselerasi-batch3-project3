@@ -7,6 +7,7 @@ type ResponseUser struct {
 	Email      string `json:"email"`
 	Password   string `json:"password"`
 	ProfilePic string `json:"profile_pic"`
+	AuthToken  string `json:"auth_token"`
 }
 type ResponseUserLogin struct {
 	ID         uint   `json:"id"`
@@ -15,6 +16,7 @@ type ResponseUserLogin struct {
 	Email      string `json:"email"`
 	Password   string `json:"password"`
 	ProfilePic string `json:"profile_pic"`
+	AuthToken  string `json:"auth_token"`
 }
 
 type ResponseUserRegistration struct {
@@ -38,6 +40,19 @@ func UserRegistrationResponseFormatter(user UserRegistration, auth_token string)
 		ProfilePic:        user.ProfilePic,
 		RegistrationToken: user.RegistrationToken,
 		AuthToken:         auth_token,
+	}
+	return formatter
+}
+
+func UserResponseFormatter(user User, auth_token string) ResponseUser {
+	formatter := ResponseUser{
+		ID:         user.ID,
+		Role:       user.Role,
+		Username:   user.Username,
+		Email:      user.Email,
+		Password:   user.Password,
+		ProfilePic: user.ProfilePic,
+		AuthToken:  auth_token,
 	}
 	return formatter
 }

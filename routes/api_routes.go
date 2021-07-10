@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/labstack/echo/v4"
+	"github.com/pranotobudi/go-akselerasi-batch3-project3/api/recipes"
 	"github.com/pranotobudi/go-akselerasi-batch3-project3/api/users"
 	"github.com/pranotobudi/go-akselerasi-batch3-project3/common"
 )
@@ -9,6 +10,7 @@ import (
 func DefineApiRoutes(e *echo.Echo) {
 	handlers := []common.Handler{
 		users.UserRoutes{},
+		recipes.RecipeRoutes{},
 	}
 
 	var routes []common.Route
