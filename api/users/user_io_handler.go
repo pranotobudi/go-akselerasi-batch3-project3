@@ -98,7 +98,7 @@ func (h *handler) UserLogin(c echo.Context) error {
 
 	// Success UserLoginResponse
 	data := UserResponseFormatter(*authUser, auth_token)
-	response := common.ResponseFormatter(http.StatusOK, "success", "user registration confirmation successfull, user created", data)
+	response := common.ResponseFormatter(http.StatusOK, "success", "user login successfull, user created", data)
 	return c.JSON(http.StatusOK, response)
 }
 
